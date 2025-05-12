@@ -1,0 +1,7 @@
+- name: Deploy TaskBoard on Amazon Linux
+  hosts: taskboard_server
+  become: true
+  roles:
+    - nodejs
+    - postgres
+    - taskboard

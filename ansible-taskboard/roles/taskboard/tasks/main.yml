@@ -1,0 +1,34 @@
+- name: Install Git
+  yum:
+    name: git
+    state: present
+
+- name: Clone TaskBoard repository
+  git:
+    repo: https://github.com/firogute/TaskBoard.git
+    dest: /opt/taskboard
+    version: main
+
+- name: Install project dependencies
+  npm:
+    path: /opt/taskboard
+    production: no
+
+- name: Install nodemon globally
+  npm:
+    name: nodemon
+    global: yes
+
+- name: Start server with nodemon
+  shell: |
+    nohup nodemon app.js &
+  args:
+    chdir: /opt/taskboard/server
+    creates: /tmp/taskboard_started
+  register: result
+
+- name: Create flag file to avoid restarting
+  file:
+    path: /tmp/taskboard_started
+    state: touch
+  when: result.changed

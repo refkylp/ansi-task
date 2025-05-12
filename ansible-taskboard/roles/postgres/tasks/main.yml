@@ -1,0 +1,32 @@
+- name: Install PostgreSQL server
+  yum:
+    name:
+      - postgresql-server
+      - postgresql
+    state: present
+
+- name: Initialize PostgreSQL DB
+  command: /usr/bin/postgresql-setup initdb
+  args:
+    creates: /var/lib/pgsql/data/pg_hba.conf
+
+- name: Start and enable PostgreSQL
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Ensure database user exists
+  become_user: postgres
+  postgresql_user:
+    name: taskboard
+    password: taskboard123
+
+- name: Ensure taskboard database exists
+  become_user: postgres
+  postgresql_db:
+    name: taskboard
+    owner: taskboard
+
+- name: Trigger handler to create table
+  meta: flush_handlers

@@ -1,0 +1,13 @@
+- name: Add NodeSource repo
+  get_url:
+    url: https://rpm.nodesource.com/setup_18.x
+    dest: /tmp/nodesource.sh
+    mode: '0755'
+
+- name: Run Node.js repo setup script
+  command: bash /tmp/nodesource.sh
+
+- name: Install Node.js and npm
+  yum:
+    name: nodejs
+    state: present

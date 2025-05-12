@@ -1,0 +1,12 @@
+- name: Create tasks table
+  become_user: postgres
+  postgresql_query:
+    db: taskboard
+    query: |
+      CREATE TABLE IF NOT EXISTS tasks (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT,
+        emoji TEXT,
+        status TEXT
+      );
